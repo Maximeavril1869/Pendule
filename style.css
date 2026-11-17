@@ -1,0 +1,113 @@
+/* Pendule - dashboard pour iPad 2 (iOS 9.3.5) : CSS simple, préfixes -webkit- conservés */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  color: #f2f2f2;
+  font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -webkit-text-size-adjust: 100%;
+}
+#app {
+  height: 100%;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  padding: 2vmin 3vmin;
+  box-sizing: border-box;
+  -webkit-transition: opacity 1s;
+  transition: opacity 1s;
+}
+#horloge {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  text-align: center;
+  padding-top: 1vmin;
+}
+#heure {
+  font-size: 24vmin;
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+#date {
+  font-size: 4.2vmin;
+  color: #b8b8b8;
+  margin-top: 1vmin;
+  text-transform: capitalize;
+}
+#meteos {
+  -webkit-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-around;
+  justify-content: space-around;
+}
+.ville {
+  -webkit-flex: 1 1 0;
+  flex: 1 1 0;
+  text-align: center;
+  padding: 0 2vmin;
+}
+.ville h2 {
+  font-size: 4.4vmin;
+  font-weight: 400;
+  margin: 0 0 1vmin 0;
+  color: #d8d8d8;
+}
+.actuel {
+  font-size: 13vmin;
+  font-weight: 200;
+  line-height: 1.1;
+}
+.actuel .icone {
+  font-size: 11vmin;
+  margin-right: 2vmin;
+}
+.detail {
+  font-size: 3.2vmin;
+  color: #a8a8a8;
+  margin-top: 0.5vmin;
+  min-height: 4vmin;
+}
+.jours {
+  margin-top: 2vmin;
+  font-size: 3vmin;
+  color: #c8c8c8;
+}
+.jour {
+  margin: 0.8vmin 0;
+}
+.jour .jn {
+  display: inline-block;
+  width: 9vmin;
+  text-align: left;
+  color: #9a9a9a;
+}
+.jour .ji {
+  display: inline-block;
+  width: 5vmin;
+}
+#statut {
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: 2.2vmin;
+  color: #666;
+  min-height: 3vmin;
+}
+#statut.erreur {
+  color: #e0a040;
+}
+/* Mode nuit (22h-7h) : affichage très atténué */
+body.nuit #app {
+  opacity: 0.28;
+}
