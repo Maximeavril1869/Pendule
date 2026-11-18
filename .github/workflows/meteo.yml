@@ -1,0 +1,44 @@
+name: Meteo
+
+# Récupère la météo auprès d'Open-Meteo et l'enregistre dans meteo.json.
+# La page de l'iPad lit ce fichier (même site, donc autorisé en mode plein écran iOS 9).
+on:
+  schedule:
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: meteo
+  cancel-in-progress: false
+
+jobs:
+  maj:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Recuperer la meteo
+        run: |
+          set -euo pipefail
+          PARAMS='current=temperature_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FParis&forecast_days=3&wind_speed_unit=kmh'
+          curl -fsS --retry 3 --retry-delay 5 "https://api.open-meteo.com/v1/forecast?latitude=45.9197&longitude=3.0667&${PARAMS}" -o chatel.json
+          curl -fsS --retry 3 --retry-delay 5 "https://api.open-meteo.com/v1/forecast?latitude=46.1278&longitude=3.4260&${PARAMS}" -o vichy.json
+          jq -n --slurpfile c chatel.json --slurpfile v vichy.json '{chatel: $c[0], vichy: $v[0]}' > meteo.json
+          rm chatel.json vichy.json
+
+      - name: Enregistrer si changement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add meteo.json
+          if git diff --cached --quiet; then
+            echo "Pas de changement"
+          else
+            git commit -m "Meteo : mise a jour automatique"
+            git push origin main
+          fi

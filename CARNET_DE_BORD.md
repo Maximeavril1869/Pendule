@@ -31,3 +31,10 @@
 - Changement : 3 nouveaux essais à 10 s d'intervalle après un échec, puis un essai par minute (`app.js?v=3`).
 - Confirmé : en Safari la météo s'affiche, depuis l'icône (plein écran) non, même après réessais. Ce n'est donc pas un problème de réveil du Wi-Fi.
 - Ajout de `diag.html` : page de test qui essaie 4 requêtes (même site, Open-Meteo x2, GitHub) et affiche le résultat, pour savoir ce que le mode plein écran d'iOS 9 bloque.
+
+## 2026-11-18 - Météo via GitHub Actions
+
+- Résultats de `diag.html` : en Safari, le même site et Open-Meteo répondent ; depuis l'icône (plein écran), seul le même site répond, toute requête vers un autre site échoue (statut 0 état 4). Cause non identifiée.
+- Solution retenue par Maxime : GitHub récupère la météo à sa place. `.github/workflows/meteo.yml` interroge Open-Meteo à H+07 et H+37 et écrit `meteo.json` dans `main` ; la page lit ce fichier (même site). Repli sur l'appel direct à l'API si le fichier est absent ou a plus de 2 h (fonctionne dans Safari).
+- Testé en simulation locale (3 scénarios). Non testé en réel : exécution du workflow, publication de `meteo.json` par GitHub Pages, affichage sur l'iPad en plein écran.
+- `app.js?v=4`.
