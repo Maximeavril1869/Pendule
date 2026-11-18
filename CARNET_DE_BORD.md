@@ -69,3 +69,9 @@
 - Lancement manuel à 12 h 54 UTC : données remises à jour, tout refonctionne.
 - Page (`app.js?v=8`) : quand les données ont plus de 2 h, elles restent affichées avec le message « Météo du JJ/MM à HH:MM : mise à jour automatique en retard » au lieu d'une erreur réseau trompeuse. Testé en simulation.
 - Reste à résoudre : fiabiliser le déclenchement automatique de la récupération.
+
+## 2026-11-18 (après-midi) - Planning toutes les 15 minutes
+
+- Décision de Maxime : option 1, planning plus fréquent. `cron` passé de `7,37 * * * *` à `3,18,33,48 * * * *` (toutes les 15 min ; minutes décalées pour éviter les pics de charge de GitHub à l'heure pile). Jusqu'à 96 commits automatiques `Meteo : mise a jour automatique` par jour sur `main`.
+- Pas de garantie : GitHub peut retarder ou sauter des déclenchements planifiés. Le contrôle des déclenchements réels est noté ci-dessous.
+- Documentation (ARCHITECTURE) mise à jour.
