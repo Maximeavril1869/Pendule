@@ -12,6 +12,7 @@
   var NUIT_DEBUT = 22; // heure de début du mode nuit
   var NUIT_FIN = 7;    // heure de fin du mode nuit
 
+  var essaisRates = 0;
   var JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
   var JOURS_COURTS = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
   var MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
@@ -117,13 +118,18 @@
         var s = $('statut');
         var d = new Date();
         if (erreurs.length === 0) {
+          essaisRates = 0;
           s.className = '';
           s.textContent = 'Météo mise à jour à ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) +
             ' · données Open-Meteo';
         } else {
           s.className = 'erreur';
-          s.textContent = 'Météo indisponible : ' + erreurs.join(' ; ') + ' · nouvel essai dans 1 min';
-          setTimeout(majMeteo, 60000);
+          essaisRates++;
+          // 3 essais rapides (10 s) puis un essai par minute
+          var delai = essaisRates <= 3 ? 10000 : 60000;
+          s.textContent = 'Météo indisponible : ' + erreurs.join(' ; ') +
+            ' · nouvel essai dans ' + (delai / 1000) + ' s';
+          setTimeout(majMeteo, delai);
           return;
         }
         setTimeout(majMeteo, INTERVALLE_METEO);

@@ -23,3 +23,9 @@
 - Ouvrir la page sur l'iPad 2 et vérifier : chargement de la page (HTTPS), affichage de la météo, lisibilité à distance.
 - Ajuster tailles, mode nuit et contenu selon le retour.
 - Idées possibles : autres informations sur le dashboard.
+
+## 2026-11-18 - Échec « connexion impossible » depuis l'icône de l'écran d'accueil
+
+- Constat : depuis l'icône, la page affiche « connexion impossible, statut 0, état 4 » (requête échouée au niveau réseau). Le comportement dans Safari était correct.
+- Cause non identifiée. Hypothèses : réseau Wi-Fi de l'iPad pas encore réveillé au lancement, ou réseau différent en mode plein écran d'iOS 9.
+- Changement : 3 nouveaux essais à 10 s d'intervalle après un échec, puis un essai par minute (`app.js?v=3`).
