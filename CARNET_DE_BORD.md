@@ -83,3 +83,9 @@
 - Les heures partent de l'heure réelle de l'iPad quand le relevé est ancien (avant : on voyait des heures déjà passées).
 - Vérifié en simulation Chromium : 1024x768 -> 18 cellules, 768x1024 -> 24, aucun débordement. Non vérifié sur l'iPad 2. `app.js?v=9`.
 - Planning automatique : toujours aucun lancement `schedule` constaté à 15 h 55 UTC (cron 15 min poussé à 13 h 34 UTC). Décision en attente (option 2 recommandée).
+
+## 2026-11-18 (soir) - Déclenchement par cron-job.org
+
+- Option 2 retenue : tâche cron-job.org (toutes les 15 min) qui lance `meteo.yml` via l'API GitHub, avec un jeton limité au dépôt (Actions lecture/écriture, expire dans 1 an, créé le 18/11/2026). Test à 17 h 13 : réponse 204, lancement `workflow_dispatch` réussi côté GitHub.
+- Planning `schedule` retiré de `meteo.yml` (jamais déclenché). `ARCHITECTURE.md` mis à jour (section « Déclenchement automatique »).
+- À vérifier sur la durée : que les lancements s'enchaînent toutes les 15 min.

@@ -2,9 +2,8 @@ name: Meteo
 
 # Récupère la météo (Open-Meteo, sinon MET Norway en secours) et l'enregistre dans meteo.json.
 # La page de l'iPad lit ce fichier (même site, donc autorisé en mode plein écran iOS 9).
+# Déclenché toutes les 15 min par cron-job.org (le planning `schedule` de GitHub ne se lançait jamais).
 on:
-  schedule:
-    - cron: '3,18,33,48 * * * *'
   workflow_dispatch:
 
 permissions:
