@@ -7,7 +7,8 @@ index.html                    Structure : bloc horloge, deux blocs météo (Châ
 style.css                     Mise en page plein écran, unités vmin (s'adapte portrait/paysage), mode nuit
 app.js                        Logique : horloge, lecture de la météo, affichage, gestion d'erreurs
 meteo.json                    Données météo des deux villes, écrites automatiquement (ne pas modifier à la main)
-.github/workflows/meteo.yml   GitHub Actions : récupère la météo auprès d'Open-Meteo et met à jour meteo.json
+.github/workflows/meteo.yml   GitHub Actions : lance scripts/meteo.py toutes les 30 min et enregistre meteo.json
+scripts/meteo.py              Récupération de la météo : Open-Meteo, sinon MET Norway (secours)
 diag.html                     Page de test réseau (outil de diagnostic, non utilisée au quotidien)
 ```
 
@@ -22,7 +23,8 @@ Navigateur (iPad 2)
            (ne fonctionne que dans Safari, voir ci-dessous)
 
 GitHub Actions (meteo.yml), à H+07 et H+37 de chaque heure
-  └─ curl api.open-meteo.com (2 villes) -> meteo.json -> commit sur main si changement -> GitHub Pages republie
+  └─ scripts/meteo.py : Open-Meteo (2 essais), sinon MET Norway en secours, converti au même format
+     -> meteo.json (champ "source" indique laquelle) -> commit sur main si changement -> GitHub Pages republie
 ```
 
 ## Choix imposés par iOS 9.3.5

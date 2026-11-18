@@ -189,7 +189,7 @@
       }
       essaisRates = 0;
       s.className = '';
-      s.textContent = 'Météo de ' + heureDonnees(t) + ' · données Open-Meteo';
+      s.textContent = 'Météo de ' + heureDonnees(t) + ' · données ' + (data.source || 'Open-Meteo');
       setTimeout(majMeteo, 5 * 60 * 1000);
     };
     xhr.onerror = repli;

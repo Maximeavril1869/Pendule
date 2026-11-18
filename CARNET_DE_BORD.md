@@ -55,3 +55,10 @@
 - Demande de Maxime : afficher les deux. Chaque heure montre désormais la probabilité de pluie (%, en bleu) et la quantité (mm, affichée seulement si > 0). Ajout de `precipitation` aux données horaires (`meteo.yml` et appel direct).
 - Pour que 3 lignes d'heures tiennent encore à l'écran : horloge réduite (19 -> 17 vmin), marges et tailles de texte resserrées. Vérifié en simulation 1024x768 et 768x1024.
 - `app.js?v=6`.
+
+## 2026-11-18 - Source de secours MET Norway
+
+- Constat : depuis les serveurs GitHub, Open-Meteo est joignable par intermittence (2 lancements sur 4 ont expiré). Un test avait montré que MET Norway répond depuis GitHub.
+- Ajout de `scripts/meteo.py` : Open-Meteo d'abord (2 essais), sinon MET Norway, converti au même format. Le champ `source` de `meteo.json` et le texte du bas d'écran indiquent la source utilisée. Le workflow lance ce script.
+- Testé en local avec des données simulées au format MET Norway (conversion et bascule). Non testé avec la vraie réponse de MET Norway : à vérifier au premier lancement où Open-Meteo échoue. Avec MET Norway, le min/max du jour ne couvre que les heures restantes, et la probabilité de pluie peut être absente.
+- `app.js?v=7`.
