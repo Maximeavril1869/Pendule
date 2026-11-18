@@ -76,3 +76,10 @@
 - Pas de garantie : GitHub peut retarder ou sauter des déclenchements planifiés. Le contrôle des déclenchements réels est noté ci-dessous.
 - Documentation (ARCHITECTURE) mise à jour.
 - Contrôle (cron poussé à 13 h 34 UTC) : créneaux de 13 h 48 et 14 h 03 UTC, aucun lancement automatique constaté à 14 h 10 UTC. Aucun lancement de type `schedule` n'a existé depuis la création du workflow (10 h 50 locale), alors qu'il est actif. L'option 1 ne fonctionne pas pour l'instant ; à recontrôler plus tard, sinon passer à l'option 2 (service externe + jeton limité).
+
+## 2026-11-18 (soir) - Prévisions horaires : au-delà de minuit
+
+- Constat de Maxime : la grille s'arrêtait à minuit. Désormais : toutes les heures suivantes, lendemain compris (en ambre), jusqu'à 24, ajustées à la place disponible par lignes entières de 6 (`ajusterHeures`, recalculé au changement d'orientation). Les deux villes ont le même nombre de cellules.
+- Les heures partent de l'heure réelle de l'iPad quand le relevé est ancien (avant : on voyait des heures déjà passées).
+- Vérifié en simulation Chromium : 1024x768 -> 18 cellules, 768x1024 -> 24, aucun débordement. Non vérifié sur l'iPad 2. `app.js?v=9`.
+- Planning automatique : toujours aucun lancement `schedule` constaté à 15 h 55 UTC (cron 15 min poussé à 13 h 34 UTC). Décision en attente (option 2 recommandée).

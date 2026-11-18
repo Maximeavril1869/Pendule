@@ -18,7 +18,7 @@ diag.html                     Page de test réseau (outil de diagnostic, non uti
 Navigateur (iPad 2)
   ├─ majHorloge()  toutes les minutes pile -> #heure, #date, classe "nuit" sur <body>
   └─ majMeteo()    toutes les 5 min
-        ├─ XMLHttpRequest -> meteo.json (même site) -> afficher() : température, emoji, vent, min/max du jour, prévisions heure par heure
+        ├─ XMLHttpRequest -> meteo.json (même site) -> afficher() : température, emoji, vent, min/max du jour, prévisions heure par heure (toutes les heures suivantes, lendemain compris, jusqu'à 24, ajustées à la place disponible par lignes de 6)
         └─ repli si le fichier est absent ou a plus de 2 h : appel direct à api.open-meteo.com
            (ne fonctionne que dans Safari, voir ci-dessous)
 

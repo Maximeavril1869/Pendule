@@ -12,6 +12,9 @@
   var NUIT_DEBUT = 22; // heure de début du mode nuit
   var NUIT_FIN = 7;    // heure de fin du mode nuit
 
+  var MAX_HEURES = 24;  // nombre maximum d'heures prévues affichées
+  var COLONNES = 6;     // cellules par ligne (voir .h dans style.css : 16,66 %)
+  var cellules = {};    // HTML des cellules horaires de chaque ville
   var essaisRates = 0;
   var JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
   var JOURS_COURTS = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
@@ -59,16 +62,40 @@
 
   function arrondi(x) { return Math.round(x); }
 
-  // Prévisions heure par heure : heures restantes de la journée (au moins 8 cellules, 18 au plus)
+  // Prévisions heure par heure : toutes les heures suivantes (y compris le lendemain), jusqu'à 24.
+  // Le nombre affiché est ensuite ajusté à la place disponible (ajusterHeures), par lignes entières.
+  function heureReelle() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours());
+  }
+
   function heuresAVenir(hourly, heureCourante) {
-    var res = [], i, t, jour = heureCourante.substring(0, 10);
+    var res = [], i;
+    // données anciennes : on part de l'heure réelle de l'iPad, pas de celle du relevé
+    if (heureReelle() > heureCourante.substring(0, 13)) { heureCourante = heureReelle(); }
     for (i = 0; i < hourly.time.length; i++) {
-      t = hourly.time[i];
-      if (t.substring(0, 13) > heureCourante.substring(0, 13)) {
-        if (t.substring(0, 10) === jour || res.length < 8) { res.push(i); }
-      }
+      if (hourly.time[i].substring(0, 13) > heureCourante.substring(0, 13)) { res.push(i); }
     }
-    return res.slice(0, 18);
+    return res.slice(0, MAX_HEURES);
+  }
+
+  // Remplit chaque ville avec le plus grand nombre de lignes d'heures qui tient à l'écran (au moins 1 ligne)
+  function ajusterHeures() {
+    var app = $('app'), max = 0, n, j, c;
+    for (j = 0; j < VILLES.length; j++) {
+      c = cellules[VILLES[j].id];
+      if (c && c.length > max) { max = c.length; }
+    }
+    if (!max) { return; }
+    n = Math.ceil(max / COLONNES) * COLONNES;
+    while (true) {
+      for (j = 0; j < VILLES.length; j++) {
+        c = cellules[VILLES[j].id] || [];
+        if (VILLES[j].bloc) { VILLES[j].bloc.innerHTML = c.slice(0, n).join(''); }
+      }
+      if (app.scrollHeight <= app.clientHeight + 1 || n <= COLONNES) { break; }
+      n -= COLONNES;
+    }
   }
 
   function afficher(v, data) {
@@ -81,22 +108,26 @@
     bloc.getElementsByClassName('detail')[0].textContent =
       desc[1] + ' · vent ' + arrondi(cur.wind_speed_10m) + ' km/h' +
       ' · ' + arrondi(jour.temperature_2m_min[0]) + '° / ' + arrondi(jour.temperature_2m_max[0]) + '°';
-    var html = '';
+    var cells = [];
     if (data.hourly) {
-      var idx = heuresAVenir(data.hourly, cur.time), k, i, dh, pluie, mm;
+      var idx = heuresAVenir(data.hourly, cur.time), k, i, dh, pluie, mm, hh, classe;
       for (k = 0; k < idx.length; k++) {
         i = idx[k];
         dh = decrire(data.hourly.weather_code[i]);
         pluie = data.hourly.precipitation_probability ? data.hourly.precipitation_probability[i] : null;
         mm = data.hourly.precipitation ? data.hourly.precipitation[i] : 0;
-        html += '<div class="h"><div class="hh">' + data.hourly.time[i].substring(11, 13) + 'h</div>' +
+        // heures du lendemain : date différente de celle des données actuelles
+        classe = data.hourly.time[i].substring(0, 10) !== heureReelle().substring(0, 10) ? 'h demain' : 'h';
+        cells.push('<div class="' + classe + '"><div class="hh">' + data.hourly.time[i].substring(11, 13) + 'h</div>' +
           '<div class="hi">' + dh[0] + '</div>' +
           '<div class="ht">' + arrondi(data.hourly.temperature_2m[i]) + '°</div>' +
           '<div class="hp">' + (pluie ? pluie + '%' : '&nbsp;') + '</div>' +
-          '<div class="hm">' + (mm > 0 ? String(Math.round(mm * 10) / 10).replace('.', ',') + ' mm' : '&nbsp;') + '</div></div>';
+          '<div class="hm">' + (mm > 0 ? String(Math.round(mm * 10) / 10).replace('.', ',') + ' mm' : '&nbsp;') + '</div></div>');
       }
     }
-    bloc.getElementsByClassName('heures')[0].innerHTML = html;
+    cellules[v.id] = cells;
+    v.bloc = bloc.getElementsByClassName('heures')[0];
+    ajusterHeures();
   }
 
   function chargerVille(v, fin) {
@@ -158,7 +189,7 @@
     for (i = 0; i < VILLES.length; i++) { chargerVille(VILLES[i], fin); }
   }
 
-  // Lecture de meteo.json (écrit toutes les 30 min par GitHub Actions, même site que la page :
+  // Lecture de meteo.json (écrit régulièrement par GitHub Actions, même site que la page :
   // c'est le seul accès réseau qui fonctionne en mode plein écran sur iOS 9).
   function heureDonnees(t) { return t.substring(11, 16); }
 
@@ -201,6 +232,7 @@
     xhr.send();
   }
 
+  window.addEventListener('resize', ajusterHeures, false);
   majHorloge();
   majMeteo();
 })();

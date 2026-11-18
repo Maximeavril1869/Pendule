@@ -92,6 +92,7 @@ html, body {
   text-align: center;
 }
 .hh { font-size: 2.2vmin; color: #9a9a9a; }
+.demain .hh { color: #d9b36a; } /* heures du lendemain */
 .hi { font-size: 3.3vmin; line-height: 1.1; }
 .ht { font-size: 2.8vmin; color: #e0e0e0; }
 .hp { font-size: 2vmin; color: #7fb0d8; }
