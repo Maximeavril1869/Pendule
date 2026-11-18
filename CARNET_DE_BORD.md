@@ -75,3 +75,4 @@
 - Décision de Maxime : option 1, planning plus fréquent. `cron` passé de `7,37 * * * *` à `3,18,33,48 * * * *` (toutes les 15 min ; minutes décalées pour éviter les pics de charge de GitHub à l'heure pile). Jusqu'à 96 commits automatiques `Meteo : mise a jour automatique` par jour sur `main`.
 - Pas de garantie : GitHub peut retarder ou sauter des déclenchements planifiés. Le contrôle des déclenchements réels est noté ci-dessous.
 - Documentation (ARCHITECTURE) mise à jour.
+- Contrôle (cron poussé à 13 h 34 UTC) : créneaux de 13 h 48 et 14 h 03 UTC, aucun lancement automatique constaté à 14 h 10 UTC. Aucun lancement de type `schedule` n'a existé depuis la création du workflow (10 h 50 locale), alors qu'il est actif. L'option 1 ne fonctionne pas pour l'instant ; à recontrôler plus tard, sinon passer à l'option 2 (service externe + jeton limité).
