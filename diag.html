@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Test Pendule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Test">
+<style>
+body { background: #000; color: #eee; font-family: -apple-system, Helvetica, Arial, sans-serif; font-size: 20px; padding: 20px; }
+h1 { font-size: 26px; }
+.t { margin: 14px 0; padding: 10px; border: 1px solid #444; }
+.ok { color: #6c6; }
+.ko { color: #e66; }
+</style>
+</head>
+<body>
+<h1>Test r&eacute;seau Pendule</h1>
+<div id="mode"></div>
+<div id="res"></div>
+<script>
+(function () {
+  var standalone = window.navigator.standalone ? 'OUI (plein &eacute;cran)' : 'NON (Safari normal)';
+  document.getElementById('mode').innerHTML = 'Lanc&eacute; depuis l\'ic&ocirc;ne : <b>' + standalone + '</b>';
+  var tests = [
+    ['1. Fichier du même site (index.html)', 'index.html'],
+    ['2. API météo Open-Meteo', 'https://api.open-meteo.com/v1/forecast?latitude=45.9197&longitude=3.0667&current=temperature_2m'],
+    ['3. API GitHub (autre site HTTPS)', 'https://api.github.com/zen'],
+    ['4. API météo Open-Meteo, 2e adresse', 'https://api.open-meteo.com/v1/forecast?latitude=46.1278&longitude=3.426&current=temperature_2m']
+  ];
+  var res = document.getElementById('res');
+  function lancer(i) {
+    if (i >= tests.length) { return; }
+    var div = document.createElement('div');
+    div.className = 't';
+    div.innerHTML = tests[i][0] + ' : en cours...';
+    res.appendChild(div);
+    var xhr = new XMLHttpRequest();
+    var debut = new Date().getTime();
+    function fin(ok, txt) {
+      div.innerHTML = tests[i][0] + ' : <span class="' + (ok ? 'ok' : 'ko') + '">' + txt + '</span> (' +
+        (new Date().getTime() - debut) + ' ms)';
+      lancer(i + 1);
+    }
+    xhr.open('GET', tests[i][1] + (i === 0 ? '?t=' + debut : ''), true);
+    xhr.timeout = 15000;
+    xhr.onload = function () { fin(xhr.status === 200, 'statut ' + xhr.status); };
+    xhr.onerror = function () { fin(false, '&Eacute;CHEC statut ' + xhr.status + ' &eacute;tat ' + xhr.readyState); };
+    xhr.ontimeout = function () { fin(false, 'd&eacute;lai d&eacute;pass&eacute;'); };
+    xhr.send();
+  }
+  lancer(0);
+})();
+</script>
+</body>
+</html>

@@ -29,3 +29,5 @@
 - Constat : depuis l'icône, la page affiche « connexion impossible, statut 0, état 4 » (requête échouée au niveau réseau). Le comportement dans Safari était correct.
 - Cause non identifiée. Hypothèses : réseau Wi-Fi de l'iPad pas encore réveillé au lancement, ou réseau différent en mode plein écran d'iOS 9.
 - Changement : 3 nouveaux essais à 10 s d'intervalle après un échec, puis un essai par minute (`app.js?v=3`).
+- Confirmé : en Safari la météo s'affiche, depuis l'icône (plein écran) non, même après réessais. Ce n'est donc pas un problème de réveil du Wi-Fi.
+- Ajout de `diag.html` : page de test qui essaie 4 requêtes (même site, Open-Meteo x2, GitHub) et affiche le résultat, pour savoir ce que le mode plein écran d'iOS 9 bloque.
