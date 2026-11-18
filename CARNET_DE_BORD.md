@@ -16,6 +16,8 @@
 - Test dans Safari de l'adresse de l'API : elle répond avec des données, donc le certificat HTTPS de l'API est accepté par iOS 9. Le problème vient de la page.
 - Cause exacte pas encore connue. Les messages d'erreur du bas d'écran sont désormais détaillés (statut, état de la requête, début de la réponse). Version du script passée à `app.js?v=2` pour éviter le cache de Safari.
 
+- Après republication : la météo s'affiche correctement sur l'iPad 2. Cause de l'échec initial non identifiée (probablement une version en cache de la page ou du script sur l'iPad).
+
 ## À faire
 
 - Ouvrir la page sur l'iPad 2 et vérifier : chargement de la page (HTTPS), affichage de la météo, lisibilité à distance.
