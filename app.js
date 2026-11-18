@@ -53,7 +53,7 @@
     return 'https://api.open-meteo.com/v1/forecast?latitude=' + v.lat + '&longitude=' + v.lon +
       '&current=temperature_2m,weather_code,wind_speed_10m' +
       '&daily=weather_code,temperature_2m_max,temperature_2m_min' +
-      '&hourly=temperature_2m,weather_code,precipitation_probability' +
+      '&hourly=temperature_2m,weather_code,precipitation_probability,precipitation' +
       '&timezone=Europe%2FParis&forecast_days=2&wind_speed_unit=kmh';
   }
 
@@ -83,15 +83,17 @@
       ' · ' + arrondi(jour.temperature_2m_min[0]) + '° / ' + arrondi(jour.temperature_2m_max[0]) + '°';
     var html = '';
     if (data.hourly) {
-      var idx = heuresAVenir(data.hourly, cur.time), k, i, dh, pluie;
+      var idx = heuresAVenir(data.hourly, cur.time), k, i, dh, pluie, mm;
       for (k = 0; k < idx.length; k++) {
         i = idx[k];
         dh = decrire(data.hourly.weather_code[i]);
         pluie = data.hourly.precipitation_probability ? data.hourly.precipitation_probability[i] : null;
+        mm = data.hourly.precipitation ? data.hourly.precipitation[i] : 0;
         html += '<div class="h"><div class="hh">' + data.hourly.time[i].substring(11, 13) + 'h</div>' +
           '<div class="hi">' + dh[0] + '</div>' +
           '<div class="ht">' + arrondi(data.hourly.temperature_2m[i]) + '°</div>' +
-          '<div class="hp">' + (pluie ? pluie + '%' : '&nbsp;') + '</div></div>';
+          '<div class="hp">' + (pluie ? pluie + '%' : '&nbsp;') + '</div>' +
+          '<div class="hm">' + (mm > 0 ? String(Math.round(mm * 10) / 10).replace('.', ',') + ' mm' : '&nbsp;') + '</div></div>';
       }
     }
     bloc.getElementsByClassName('heures')[0].innerHTML = html;

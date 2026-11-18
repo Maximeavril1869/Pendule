@@ -16,7 +16,7 @@ html, body {
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  padding: 2vmin 3vmin;
+  padding: 1.2vmin 3vmin;
   box-sizing: border-box;
   -webkit-transition: opacity 1s;
   transition: opacity 1s;
@@ -28,13 +28,13 @@ html, body {
   padding-top: 1vmin;
 }
 #heure {
-  font-size: 19vmin;
+  font-size: 17vmin;
   font-weight: 200;
   line-height: 1;
   letter-spacing: 0.02em;
 }
 #date {
-  font-size: 4.2vmin;
+  font-size: 3.8vmin;
   color: #b8b8b8;
   margin-top: 1vmin;
   text-transform: capitalize;
@@ -60,7 +60,7 @@ html, body {
 .ville h2 {
   font-size: 4.4vmin;
   font-weight: 400;
-  margin: 0 0 1vmin 0;
+  margin: 0 0 0.5vmin 0;
   color: #d8d8d8;
 }
 .actuel {
@@ -91,10 +91,11 @@ html, body {
   padding: 0.4vmin 0;
   text-align: center;
 }
-.hh { font-size: 2.3vmin; color: #9a9a9a; }
-.hi { font-size: 3.6vmin; line-height: 1.15; }
-.ht { font-size: 3vmin; color: #e0e0e0; }
+.hh { font-size: 2.2vmin; color: #9a9a9a; }
+.hi { font-size: 3.3vmin; line-height: 1.1; }
+.ht { font-size: 2.8vmin; color: #e0e0e0; }
 .hp { font-size: 2vmin; color: #7fb0d8; }
+.hm { font-size: 1.9vmin; color: #5f95c4; }
 #statut {
   -webkit-flex: 0 0 auto;
   flex: 0 0 auto;
