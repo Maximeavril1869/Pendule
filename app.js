@@ -92,13 +92,16 @@
           afficher(v, JSON.parse(xhr.responseText));
           fin(null);
         } catch (e) {
-          fin('données illisibles (' + v.nom + ')');
+          fin('données illisibles (' + v.nom + ') : ' + (e && e.message ? e.message : e) +
+            ' | réponse : ' + String(xhr.responseText).substring(0, 120));
         }
       } else {
-        fin('erreur HTTP ' + xhr.status + ' (' + v.nom + ')');
+        fin('erreur HTTP ' + xhr.status + ' (' + v.nom + ') : ' + String(xhr.responseText).substring(0, 120));
       }
     };
-    xhr.onerror = function () { fin('connexion impossible (' + v.nom + ')'); };
+    xhr.onerror = function () {
+      fin('connexion impossible (' + v.nom + '), statut ' + xhr.status + ', état ' + xhr.readyState);
+    };
     xhr.ontimeout = function () { fin('délai dépassé (' + v.nom + ')'); };
     xhr.send();
   }
