@@ -3,9 +3,12 @@
 Application web statique, sans serveur ni outil de build, hébergée sur GitHub Pages.
 
 ```
-index.html   Structure : bloc horloge, deux blocs météo (Châtel-Guyon, Vichy), ligne de statut
-style.css    Mise en page plein écran, unités vmin (s'adapte portrait/paysage), mode nuit
-app.js       Logique : horloge, appels météo, affichage, gestion d'erreurs
+index.html                    Structure : bloc horloge, deux blocs météo (Châtel-Guyon, Vichy), ligne de statut
+style.css                     Mise en page plein écran, unités vmin (s'adapte portrait/paysage), mode nuit
+app.js                        Logique : horloge, lecture de la météo, affichage, gestion d'erreurs
+meteo.json                    Données météo des deux villes, écrites automatiquement (ne pas modifier à la main)
+.github/workflows/meteo.yml   GitHub Actions : récupère la météo auprès d'Open-Meteo et met à jour meteo.json
+diag.html                     Page de test réseau (outil de diagnostic, non utilisée au quotidien)
 ```
 
 ## Flux
@@ -13,10 +16,13 @@ app.js       Logique : horloge, appels météo, affichage, gestion d'erreurs
 ```
 Navigateur (iPad 2)
   ├─ majHorloge()  toutes les minutes pile -> #heure, #date, classe "nuit" sur <body>
-  └─ majMeteo()    toutes les 15 min (1 min après un échec)
-        ├─ XMLHttpRequest -> api.open-meteo.com (Châtel-Guyon)
-        ├─ XMLHttpRequest -> api.open-meteo.com (Vichy)
-        └─ afficher() -> température, emoji, vent, 3 jours de prévisions
+  └─ majMeteo()    toutes les 5 min
+        ├─ XMLHttpRequest -> meteo.json (même site) -> afficher() : température, emoji, vent, 3 jours
+        └─ repli si le fichier est absent ou a plus de 2 h : appel direct à api.open-meteo.com
+           (ne fonctionne que dans Safari, voir ci-dessous)
+
+GitHub Actions (meteo.yml), à H+07 et H+37 de chaque heure
+  └─ curl api.open-meteo.com (2 villes) -> meteo.json -> commit sur main si changement -> GitHub Pages republie
 ```
 
 ## Choix imposés par iOS 9.3.5
@@ -24,10 +30,11 @@ Navigateur (iPad 2)
 - JavaScript ES5 uniquement : `var`, `function`, `XMLHttpRequest`.
 - CSS avec préfixes `-webkit-` pour flexbox et transitions.
 - Pas de service worker, donc pas de PWA hors ligne : la page a besoin du réseau pour charger et pour la météo.
-- Risque connu : certificats HTTPS récents parfois refusés par iOS 9 (racines expirées). Si la page ou l'API ne charge pas, le message d'erreur du bas d'écran le signale.
+- Constaté sur l'iPad 2 (test `diag.html`) : lancée depuis l'icône de l'écran d'accueil (mode plein écran), la page ne peut lire que les fichiers de son propre site ; toute requête vers un autre site échoue (statut 0, état 4). Dans Safari, l'appel direct à Open-Meteo fonctionne. D'où le fichier `meteo.json`, servi par le même site. Cause exacte non identifiée.
 
 ## Paramètres modifiables (début de `app.js`)
 
 - `VILLES` : nom et coordonnées GPS.
-- `INTERVALLE_METEO` : fréquence de rafraîchissement.
+- `INTERVALLE_METEO` : fréquence de l'appel direct (repli).
+- `meteo.yml` : horaires de récupération (`cron`) et villes (coordonnées dans les adresses).
 - `NUIT_DEBUT` / `NUIT_FIN` : plage du mode nuit.

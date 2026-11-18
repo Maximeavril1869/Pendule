@@ -5,9 +5,9 @@ Dashboard pour un vieil iPad 2 (iOS 9.3.5) posé sur une cheminée : une grande 
 ## Ce que fait la page
 
 - Heure et date en français, en grand, mises à jour à la minute.
-- Météo actuelle (température, ciel, vent) et prévisions sur 3 jours pour les deux villes, via l'API gratuite [Open-Meteo](https://open-meteo.com) (sans clé), rafraîchie toutes les 15 minutes.
+- Météo actuelle (température, ciel, vent) et prévisions sur 3 jours pour les deux villes, données de l'API gratuite [Open-Meteo](https://open-meteo.com) (sans clé), récupérées par GitHub toutes les 30 minutes environ dans `meteo.json`. La page relit ce fichier toutes les 5 minutes.
 - Mode nuit automatique entre 22 h et 7 h : affichage très atténué.
-- En cas d'échec de connexion, un message orange en bas d'écran indique la cause et la page réessaie toute seule au bout d'une minute.
+- En cas de problème, un message orange en bas d'écran indique la cause et la page réessaie toute seule.
 
 ## Utilisation sur l'iPad
 
