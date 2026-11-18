@@ -1,0 +1,25 @@
+name: Diag reseau
+
+# Test temporaire : quelles sources météo sont joignables depuis les serveurs GitHub ?
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Tester les sources
+        run: |
+          t() {
+            printf '%s -> ' "$1"
+            curl -sS -o /dev/null --max-time 12 -A "Pendule/1.0 github.com/Maximeavril1869/Pendule" -w 'HTTP %{http_code} en %{time_total}s' $2 "$1" 2>&1 || true
+            echo
+          }
+          t "https://api.open-meteo.com/v1/forecast?latitude=45.9&longitude=3.0&current=temperature_2m"
+          t "https://api.open-meteo.com/v1/forecast?latitude=45.9&longitude=3.0&current=temperature_2m" -4
+          t "https://api.open-meteo.com/v1/forecast?latitude=45.9&longitude=3.0&current=temperature_2m" -6
+          t "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=45.92&lon=3.07"
+          t "https://wttr.in/Vichy?format=j1"
+          t "https://api.github.com/zen"
+          echo "IP sortante :"; curl -sS --max-time 10 https://api.ipify.org || true; echo
