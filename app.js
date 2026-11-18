@@ -52,11 +52,24 @@
   function url(v) {
     return 'https://api.open-meteo.com/v1/forecast?latitude=' + v.lat + '&longitude=' + v.lon +
       '&current=temperature_2m,weather_code,wind_speed_10m' +
-      '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max' +
-      '&timezone=Europe%2FParis&forecast_days=3&wind_speed_unit=kmh';
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min' +
+      '&hourly=temperature_2m,weather_code,precipitation_probability' +
+      '&timezone=Europe%2FParis&forecast_days=2&wind_speed_unit=kmh';
   }
 
   function arrondi(x) { return Math.round(x); }
+
+  // Prévisions heure par heure : heures restantes de la journée (au moins 8 cellules, 18 au plus)
+  function heuresAVenir(hourly, heureCourante) {
+    var res = [], i, t, jour = heureCourante.substring(0, 10);
+    for (i = 0; i < hourly.time.length; i++) {
+      t = hourly.time[i];
+      if (t.substring(0, 13) > heureCourante.substring(0, 13)) {
+        if (t.substring(0, 10) === jour || res.length < 8) { res.push(i); }
+      }
+    }
+    return res.slice(0, 18);
+  }
 
   function afficher(v, data) {
     var bloc = $(v.id);
@@ -66,21 +79,22 @@
     bloc.getElementsByClassName('icone')[0].textContent = desc[0];
     bloc.getElementsByClassName('temp')[0].textContent = arrondi(cur.temperature_2m) + '°';
     bloc.getElementsByClassName('detail')[0].textContent =
-      desc[1] + ' · vent ' + arrondi(cur.wind_speed_10m) + ' km/h';
+      desc[1] + ' · vent ' + arrondi(cur.wind_speed_10m) + ' km/h' +
+      ' · ' + arrondi(jour.temperature_2m_min[0]) + '° / ' + arrondi(jour.temperature_2m_max[0]) + '°';
     var html = '';
-    var i;
-    for (i = 0; i < jour.time.length; i++) {
-      var p = jour.time[i].split('-');
-      var dj = new Date(parseInt(p[0], 10), parseInt(p[1], 10) - 1, parseInt(p[2], 10));
-      var nom = i === 0 ? 'auj.' : JOURS_COURTS[dj.getDay()];
-      var dd = decrire(jour.weather_code[i]);
-      var pluie = jour.precipitation_probability_max ? jour.precipitation_probability_max[i] : null;
-      html += '<div class="jour"><span class="jn">' + nom + '</span>' +
-        '<span class="ji">' + dd[0] + '</span> ' +
-        arrondi(jour.temperature_2m_min[i]) + '° / ' + arrondi(jour.temperature_2m_max[i]) + '°' +
-        (pluie !== null && pluie !== undefined ? ' · ' + pluie + '%' : '') + '</div>';
+    if (data.hourly) {
+      var idx = heuresAVenir(data.hourly, cur.time), k, i, dh, pluie;
+      for (k = 0; k < idx.length; k++) {
+        i = idx[k];
+        dh = decrire(data.hourly.weather_code[i]);
+        pluie = data.hourly.precipitation_probability ? data.hourly.precipitation_probability[i] : null;
+        html += '<div class="h"><div class="hh">' + data.hourly.time[i].substring(11, 13) + 'h</div>' +
+          '<div class="hi">' + dh[0] + '</div>' +
+          '<div class="ht">' + arrondi(data.hourly.temperature_2m[i]) + '°</div>' +
+          '<div class="hp">' + (pluie ? pluie + '%' : '&nbsp;') + '</div></div>';
+      }
     }
-    bloc.getElementsByClassName('jours')[0].innerHTML = html;
+    bloc.getElementsByClassName('heures')[0].innerHTML = html;
   }
 
   function chargerVille(v, fin) {

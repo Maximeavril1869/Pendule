@@ -42,3 +42,10 @@
 - Workflow lancé à la main : succès, `meteo.json` écrit sur `main` (données Châtel-Guyon et Vichy), GitHub Pages republié automatiquement.
 - À vérifier sur l'iPad en plein écran : que la météo s'affiche depuis l'icône. Les mises à jour automatiques à H+07 et H+37 n'ont pas encore été observées sur la durée.
 - Documentation (README, ARCHITECTURE) mise à jour.
+
+## 2026-11-18 - Prévisions heure par heure
+
+- Demande de Maxime : voir les prévisions de la journée ; choix : une ligne par heure, en remplacement des prévisions sur 3 jours.
+- Affichage : météo actuelle + min/max du jour, puis une cellule par heure (heure, icône, température, probabilité de pluie) jusqu'à minuit, au moins 8 heures (déborde sur le lendemain si besoin), 18 au plus. `forecast_days=2`, ajout de `hourly=` dans `meteo.yml` et dans l'appel direct.
+- Vérifié en simulation (Chromium 1024x768 et 768x1024, 7 h et 11 h) : tout tient à l'écran. Rendu des emojis non vérifié sur iOS 9. Horloge réduite (21 -> 19 vmin) pour tenir.
+- `app.js?v=5`. Ancien `meteo.json` sans données horaires : la page s'affiche sans la grille horaire jusqu'à la prochaine récupération.

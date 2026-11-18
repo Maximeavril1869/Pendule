@@ -28,7 +28,7 @@ html, body {
   padding-top: 1vmin;
 }
 #heure {
-  font-size: 24vmin;
+  font-size: 19vmin;
   font-weight: 200;
   line-height: 1;
   letter-spacing: 0.02em;
@@ -64,12 +64,12 @@ html, body {
   color: #d8d8d8;
 }
 .actuel {
-  font-size: 13vmin;
+  font-size: 11vmin;
   font-weight: 200;
   line-height: 1.1;
 }
 .actuel .icone {
-  font-size: 11vmin;
+  font-size: 9vmin;
   margin-right: 2vmin;
 }
 .detail {
@@ -78,24 +78,23 @@ html, body {
   margin-top: 0.5vmin;
   min-height: 4vmin;
 }
-.jours {
-  margin-top: 2vmin;
-  font-size: 3vmin;
-  color: #c8c8c8;
+.heures {
+  margin-top: 1.5vmin;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
-.jour {
-  margin: 0.8vmin 0;
+.h {
+  width: 16.66%;
+  box-sizing: border-box;
+  padding: 0.4vmin 0;
+  text-align: center;
 }
-.jour .jn {
-  display: inline-block;
-  width: 9vmin;
-  text-align: left;
-  color: #9a9a9a;
-}
-.jour .ji {
-  display: inline-block;
-  width: 5vmin;
-}
+.hh { font-size: 2.3vmin; color: #9a9a9a; }
+.hi { font-size: 3.6vmin; line-height: 1.15; }
+.ht { font-size: 3vmin; color: #e0e0e0; }
+.hp { font-size: 2vmin; color: #7fb0d8; }
 #statut {
   -webkit-flex: 0 0 auto;
   flex: 0 0 auto;

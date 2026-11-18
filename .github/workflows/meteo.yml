@@ -26,7 +26,7 @@ jobs:
       - name: Recuperer la meteo
         run: |
           set -euo pipefail
-          PARAMS='current=temperature_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FParis&forecast_days=3&wind_speed_unit=kmh'
+          PARAMS='current=temperature_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&hourly=temperature_2m,weather_code,precipitation_probability&timezone=Europe%2FParis&forecast_days=2&wind_speed_unit=kmh'
           curl -fsS -A "Pendule/1.0 github.com/Maximeavril1869/Pendule" --max-time 20 --retry 4 --retry-delay 5 --retry-all-errors "https://api.open-meteo.com/v1/forecast?latitude=45.9197&longitude=3.0667&${PARAMS}" -o chatel.json
           curl -fsS -A "Pendule/1.0 github.com/Maximeavril1869/Pendule" --max-time 20 --retry 4 --retry-delay 5 --retry-all-errors "https://api.open-meteo.com/v1/forecast?latitude=46.1278&longitude=3.4260&${PARAMS}" -o vichy.json
           jq -n --slurpfile c chatel.json --slurpfile v vichy.json '{chatel: $c[0], vichy: $v[0]}' > meteo.json
