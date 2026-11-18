@@ -123,7 +123,7 @@
     xhr.send();
   }
 
-  function majMeteoDirecte() {
+  function majMeteoDirecte(garderStatut) {
     var restant = VILLES.length;
     var erreurs = [];
     var i;
@@ -138,6 +138,10 @@
           s.className = '';
           s.textContent = 'Météo mise à jour à ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) +
             ' · données Open-Meteo';
+        } else if (garderStatut) {
+          // données anciennes déjà affichées : on garde leur message, nouvel essai dans 5 min
+          setTimeout(majMeteo, 5 * 60 * 1000);
+          return;
         } else {
           s.className = 'erreur';
           essaisRates++;
@@ -145,7 +149,7 @@
           var delai = essaisRates <= 3 ? 10000 : 60000;
           s.textContent = 'Météo indisponible : ' + erreurs.join(' ; ') +
             ' · nouvel essai dans ' + (delai / 1000) + ' s';
-          setTimeout(majMeteoDirecte, delai);
+          setTimeout(function () { majMeteoDirecte(false); }, delai);
           return;
         }
         setTimeout(majMeteo, INTERVALLE_METEO);
@@ -182,9 +186,9 @@
       s = $('statut');
       if (age > 120) {
         s.className = 'erreur';
-        s.textContent = 'Données météo anciennes (du ' + t.substring(8, 10) + '/' + t.substring(5, 7) +
-          ' à ' + heureDonnees(t) + ')';
-        majMeteoDirecte(); // tente l'appel direct (fonctionne dans Safari)
+        s.textContent = 'Météo du ' + t.substring(8, 10) + '/' + t.substring(5, 7) + ' à ' + heureDonnees(t) +
+          ' : mise à jour automatique en retard';
+        majMeteoDirecte(true); // tente l'appel direct (fonctionne dans Safari, pas en plein écran)
         return;
       }
       essaisRates = 0;

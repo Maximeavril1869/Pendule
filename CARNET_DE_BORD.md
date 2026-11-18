@@ -62,3 +62,10 @@
 - Ajout de `scripts/meteo.py` : Open-Meteo d'abord (2 essais), sinon MET Norway, converti au même format. Le champ `source` de `meteo.json` et le texte du bas d'écran indiquent la source utilisée. Le workflow lance ce script.
 - Testé en local avec des données simulées au format MET Norway (conversion et bascule). Non testé avec la vraie réponse de MET Norway : à vérifier au premier lancement où Open-Meteo échoue. Avec MET Norway, le min/max du jour ne couvre que les heures restantes, et la probabilité de pluie peut être absente.
 - `app.js?v=7`.
+
+## 2026-11-18 (après-midi) - Le planning automatique ne se déclenche pas
+
+- Constat à 13 h 54 : l'iPad réaffiche « connexion impossible, statut 0, état 4 ». Cause : `meteo.json` datait de 11 h 15 (plus de 2 h), car **aucun lancement automatique** n'a eu lieu depuis la mise en place (seuls les lancements manuels ont tourné). Le planning `7,37 * * * *` ne se déclenche pas ; le workflow est pourtant actif. Aucun créneau (13 h 07 UTC compris, vérifié jusqu'à 13 h 21) n'a démarré. Cause de GitHub non identifiée.
+- Lancement manuel à 12 h 54 UTC : données remises à jour, tout refonctionne.
+- Page (`app.js?v=8`) : quand les données ont plus de 2 h, elles restent affichées avec le message « Météo du JJ/MM à HH:MM : mise à jour automatique en retard » au lieu d'une erreur réseau trompeuse. Testé en simulation.
+- Reste à résoudre : fiabiliser le déclenchement automatique de la récupération.
